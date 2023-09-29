@@ -1,57 +1,47 @@
-import React, { useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useRef, useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function Register({ headName }) {
+export default function AdminLogin({ headName }) {
+  const authCtx = useContext(AuthContext);
+
   const navigate = useNavigate();
-  const name = useRef();
+
   const username = useRef();
   const password = useRef();
 
-  const registerFormSubmitHandler = async (e) => {
+  const loginFormSubmitHandler = async (e) => {
     e.preventDefault();
-    const enteredName = name.current.value;
     const enteredUsername = username.current.value;
-    const enteredPassword = password.current.value;
-
+    const enteredPassword = username.current.value;
+    let response;
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/register",
+      response = await axios.post(
+        "http://localhost:3000/api/auth/login",
         {
-          name: enteredName,
           username: enteredUsername,
           password: enteredPassword,
         },
         { withCredentials: true }
       );
-
+      const data = response.data;
       if (response.status == 200) {
-        alert("Registration Successful");
-        navigate("/login", { replace: true });
+        alert("Login Successful");
+        authCtx.setIsLoggedInHandler(data.user.name, true, data.user.isAdmin);
+        navigate("/admin", { replace: true });
       }
     } catch (error) {
       console.log(error);
-      alert(response.data.message);
+      alert(error.response.data.message);
     }
   };
+
   return (
     <div className="columns is-centered">
       <div className="column is-desktop is-half mt-6 box">
         <h1 className="title is-3 has-text-centered">{headName}</h1>
-        <form onSubmit={registerFormSubmitHandler} className="form">
-          <div className="field">
-            <p className="control has-icons-left has-icons-right">
-              <input
-                className="input"
-                type="text"
-                placeholder="Name"
-                ref={name}
-              />
-              <span className="icon is-small is-left">
-                <i className="fas fa-envelope"></i>
-              </span>
-            </p>
-          </div>
+        <form onSubmit={loginFormSubmitHandler} className="form">
           <div className="field">
             <p className="control has-icons-left has-icons-right">
               <input
@@ -62,6 +52,9 @@ export default function Register({ headName }) {
               />
               <span className="icon is-small is-left">
                 <i className="fas fa-envelope"></i>
+              </span>
+              <span className="icon is-small is-right">
+                <i className="fas fa-check"></i>
               </span>
             </p>
           </div>
@@ -80,9 +73,8 @@ export default function Register({ headName }) {
           </div>
           <div className="field">
             <p className="control">
-              <button className="button is-success">Register</button>
+              <button className="button is-success">Login</button>
             </p>
-            <Link to="/login">Aleady a Member? Login here</Link>
           </div>
         </form>
       </div>

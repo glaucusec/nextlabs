@@ -1,7 +1,13 @@
-import React, { useRef } from "react";
+import React, { useRef, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import axios from "axios";
 
-export default function Login({ name }) {
+export default function Login({ headName }) {
+  const authCtx = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
   const username = useRef();
   const password = useRef();
 
@@ -9,9 +15,9 @@ export default function Login({ name }) {
     e.preventDefault();
     const enteredUsername = username.current.value;
     const enteredPassword = username.current.value;
-
+    let response;
     try {
-      const response = await axios.post(
+      response = await axios.post(
         "http://localhost:3000/api/auth/login",
         {
           username: enteredUsername,
@@ -19,23 +25,31 @@ export default function Login({ name }) {
         },
         { withCredentials: true }
       );
-      console.log(response);
+      const data = response.data;
+      if (response.status == 200) {
+        alert("Login Successful");
+        authCtx.setIsLoggedInHandler(data.user.name, true, data.user.isAdmin);
+        navigate("/home", { replace: true });
+      }
     } catch (error) {
       console.log(error);
+      alert(error.response.data.message);
     }
   };
 
-  return (
+  return authCtx.isLoggedIn && !authCtx.isAdmin ? (
+    <Navigate to="/home" />
+  ) : (
     <div className="columns is-centered">
       <div className="column is-desktop is-half mt-6 box">
-        <h1 className="title is-3 has-text-centered">{name} Login</h1>
+        <h1 className="title is-3 has-text-centered">{headName}</h1>
         <form onSubmit={loginFormSubmitHandler} className="form">
           <div className="field">
             <p className="control has-icons-left has-icons-right">
               <input
                 className="input"
                 type="text"
-                placeholder="Email"
+                placeholder="Username"
                 ref={username}
               />
               <span className="icon is-small is-left">
@@ -63,6 +77,7 @@ export default function Login({ name }) {
             <p className="control">
               <button className="button is-success">Login</button>
             </p>
+            <Link to="/register">Not a Member? Register here</Link>
           </div>
         </form>
       </div>

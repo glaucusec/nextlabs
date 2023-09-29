@@ -1,20 +1,22 @@
 import React, { useState, useContext } from "react";
 import { Routes, Route, Outlet, Link, Navigate } from "react-router-dom";
 import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
-  faPlus,
+  faUser,
+  faTasks,
+  faCheck,
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Header from "./Header/Header";
+import { AuthContext } from "../context/AuthContext";
+import Header from "../Admin/Header/Header";
 
 export default function Admin() {
-  const authCtx = useContext(AuthContext);
   const [activeNav, setActiveNav] = useState("home");
-
+  const authCtx = useContext(AuthContext);
   async function logoutHandler() {
     setActiveNav("logout");
     try {
@@ -33,10 +35,13 @@ export default function Admin() {
       alert(error);
     }
   }
+  if (authCtx.isLoggedIn && authCtx.isAdmin) {
+    return <Navigate to="/admin" />;
+  }
 
-  // if (authCtx.isLoggedIn == false && authCtx.isAdmin == false) {
-  //   return <Navigate to="/admin/login" replace={true} />;
-  // }
+  if (!authCtx.isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div>
@@ -47,7 +52,7 @@ export default function Admin() {
           <ul class="menu-list">
             <li>
               <Link
-                to="/admin"
+                to="/home"
                 onClick={() => setActiveNav("home")}
                 href="#"
                 class={activeNav == "home" ? "is-active" : ""}
@@ -60,15 +65,41 @@ export default function Admin() {
             </li>
             <li>
               <Link
-                to="/admin/add"
-                onClick={() => setActiveNav("add-apps")}
+                to="/home/profile"
+                onClick={() => setActiveNav("profile")}
                 href="#"
-                class={activeNav == "add-apps" ? "is-active" : ""}
+                class={activeNav == "profile" ? "is-active" : ""}
               >
                 <span class="icon">
-                  <FontAwesomeIcon icon={faPlus} />
+                  <FontAwesomeIcon icon={faUser} />
                 </span>{" "}
-                Add Apps
+                Profile
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/home/points"
+                onClick={() => setActiveNav("points")}
+                href="#"
+                class={activeNav == "points" ? "is-active" : ""}
+              >
+                <span class="icon">
+                  <FontAwesomeIcon icon={faCheck} />
+                </span>{" "}
+                Points
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/home/tasks"
+                onClick={() => setActiveNav("tasks")}
+                href="#"
+                class={activeNav == "tasks" ? "is-active" : ""}
+              >
+                <span class="icon">
+                  <FontAwesomeIcon icon={faTasks} />
+                </span>{" "}
+                Tasks
               </Link>
             </li>
             <li>

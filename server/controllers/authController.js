@@ -3,92 +3,135 @@ require("dotenv").config();
 const jwtSecretToken = process.env.jwtSecret;
 
 const User = require("../models/User");
-const { hashPassword, passwordsMatch } = require("../util/helper");
+const {
+	hashPassword,
+	passwordsMatch
+} = require("../util/helper");
 
 const login = async (req, res, next) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  if (!username || !password) {
-    return res.status(400).json({
-      message: "Username or Password not present",
-    });
-  }
+	const username = req.body.username;
+	const password = req.body.password;
 
-  try {
-    const user = await User.findOne({
-      where: { username: username },
-    });
+	if (!username || !password) {
+		return res.status(400).json({
+			message: "Username or Password not present",
+		});
+	}
 
-    const match = await passwordsMatch(password, user.password);
+	try {
+		const user = await User.findOne({
+			where: {
+				username: username
+			},
+		});
 
-    if (!match) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
+		if (!user) {
+			return res.status(401).json({
+				message: "User not found",
+			});
+		}
 
-    if (!user) {
-      res.status(401).json({
-        message: "Login not successful",
-        error: "User not found",
-      });
-    } else {
-      const maxAge = 3 * 60 * 60;
-      const token = jwt.sign(
-        { id: user._id, username, role: user.isAdmin ? "admin" : "user" },
-        jwtSecretToken,
-        {
-          expiresIn: maxAge, // 3hrs in sec
-        }
-      );
+		const match = await passwordsMatch(password, user.password);
 
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        maxAge: maxAge * 1000, // 3hrs in ms
-      });
+		if (!match) {
+			return res.status(401).json({
+				message: "Invalid credentials"
+			});
+		}
 
-      res.status(200).json({
-        message: "Login successful",
-        user: { name: user.name, username: username },
-      });
-    }
-  } catch (error) {
-    res.status(400).json({
-      message: "An error occurred",
-      error: error.message,
-    });
-  }
+		const maxAge = 3 * 60 * 60;
+		const token = jwt.sign({
+				id: user._id,
+				username,
+				role: user.isAdmin ? "admin" : "user"
+			},
+			jwtSecretToken, {
+				expiresIn: maxAge, // 3hrs in sec
+			}
+		);
+
+		res.cookie("jwt", token, {
+			httpOnly: true,
+			maxAge: maxAge * 1000, // 3hrs in ms
+		});
+
+		res.cookie(
+			"context",
+			JSON.stringify({
+				name: user.name,
+				isLoggedIn: true,
+				isAdmin: user.isAdmin ? true : false,
+			}), {
+				maxAge: maxAge * 1000, // 3hrs in ms
+			}
+		);
+
+		res.status(200).json({
+			message: "Login successful",
+			user: {
+				name: user.name,
+				username: username,
+				isAdmin: user.isAdmin ? true : false,
+			},
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({
+			message: "An error occurred",
+			error: error.message,
+		});
+	}
 };
 
 const register = async (req, res, next) => {
-  const name = req.body.name;
-  const username = req.body.username;
-  const password = req.body.password;
-  if (password.length < 6) {
-    return res.status(400).json({ message: "Password less than 6 characters" });
-  }
+	const name = req.body.name;
+	const username = req.body.username;
+	const password = req.body.password;
+	if (password.length < 6) {
+		return res.status(400).json({
+			message: "Password less than 6 characters"
+		});
+	}
 
-  const hashedPassword = await hashPassword(password);
+	const hashedPassword = await hashPassword(password);
 
-  let user;
-  try {
-    user = User.create({
-      name: name,
-      username: username,
-      password: hashedPassword,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(401).json({
-      message: "User not successful created",
-      error: error.mesage,
-    });
-  }
+	let user;
+	try {
+		user = User.create({
+			name: name,
+			username: username,
+			password: hashedPassword,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(401).json({
+			message: "User not successful created",
+			error: error.mesage,
+		});
+	}
 
-  return res.status(200).json({
-    message: "User successfully created",
-    user: { name: user.name, username: username },
-  });
+	return res.status(200).json({
+		message: "User successfully created",
+		user: {
+			name: user.name,
+			username: username
+		},
+	});
 };
 
-const logout = () => {};
+const logout = async (req, res, next) => {
+	res.cookie("jwt", "", {
+		maxAge: "1"
+	});
+	res.cookie("context", "", {
+		maxAge: "1"
+	});
+	res.setHeader("Location", "http://localhost:5173/login");
+	res.status(200).json();
+};
 
-module.exports = { login, register, logout };
+module.exports = {
+	login,
+	register,
+	logout
+};

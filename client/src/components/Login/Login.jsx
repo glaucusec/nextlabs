@@ -29,7 +29,11 @@ export default function Login({ headName }) {
       if (response.status == 200) {
         alert("Login Successful");
         authCtx.setIsLoggedInHandler(data.user.name, true, data.user.isAdmin);
-        navigate("/home", { replace: true });
+        if (data.user.isAdmin) {
+          navigate("/admin", { replace: true });
+        } else {
+          navigate("/home", { replace: true });
+        }
       }
     } catch (error) {
       console.log(error);
@@ -37,9 +41,14 @@ export default function Login({ headName }) {
     }
   };
 
-  return authCtx.isLoggedIn && !authCtx.isAdmin ? (
-    <Navigate to="/home" />
-  ) : (
+  if (authCtx.isLoggedIn && !authCtx.isAdmin) {
+    <Navigate to="/home" />;
+  }
+  if (authCtx.isLoggedIn && authCtx.isAdmin) {
+    <Navigate to="/admin" />;
+  }
+
+  return (
     <div className="columns is-centered">
       <div className="column is-desktop is-half mt-6 box">
         <h1 className="title is-3 has-text-centered">{headName}</h1>

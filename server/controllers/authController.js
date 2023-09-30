@@ -41,8 +41,8 @@ const login = async (req, res, next) => {
 
 		const maxAge = 3 * 60 * 60;
 		const token = jwt.sign({
-				id: user._id,
-				username,
+				id: user.id,
+				username: user.username,
 				role: user.isAdmin ? "admin" : "user"
 			},
 			jwtSecretToken, {

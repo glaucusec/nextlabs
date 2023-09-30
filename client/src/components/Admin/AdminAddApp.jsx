@@ -1,6 +1,9 @@
 import React, { useRef, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 export default function AdminAddApp() {
+  const navigate = useNavigate();
   const [points, setPoints] = useState("Add Points");
   const [categoryOptions, setCategoryOptions] = useState(["App Category"]);
   const [imageURL, setImageURL] = useState(
@@ -18,9 +21,10 @@ export default function AdminAddApp() {
   async function fetchCategoriesHandler(e) {
     e.preventDefault();
     setFetching(true);
+    let response;
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/app/fetch",
+      response = await axios.post(
+        "http://localhost:3000/api/admin/fetchCategories",
         {
           appName: appName.current.value,
           appLink: appLink.current.value,
@@ -35,6 +39,7 @@ export default function AdminAddApp() {
       }
     } catch (error) {
       setFetching(false);
+      alert(error.response.data.message);
     }
   }
 
@@ -47,16 +52,21 @@ export default function AdminAddApp() {
   async function appSubmitHandler(e) {
     e.preventDefault();
     const response = await axios.post(
-      "http://localhost:3000/api/app/add",
+      "http://localhost:3000/api/admin/createTask",
       {
         appName: appName.current.value,
         appLink: appLink.current.value,
         category: selectedCategory.current.value,
         subcategory: selectedSubCategory.current.value,
+        imageURL: imageURL,
         points: points,
       },
       { withCredentials: true }
     );
+    if (response.status == 201) {
+      alert("Task App Added");
+      navigate("/home");
+    }
   }
 
   return (

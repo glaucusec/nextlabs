@@ -1,126 +1,49 @@
-import React, { useState, useContext } from "react";
-import { Routes, Route, Outlet, Link, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useOutletContext } from "react-router-dom";
 import axios from "axios";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHome,
-  faUser,
-  faTasks,
-  faCheck,
-  faRightFromBracket,
-} from "@fortawesome/free-solid-svg-icons";
-
-import { AuthContext } from "../context/AuthContext";
-import Header from "../Admin/Header/Header";
-
-export default function Admin() {
-  const [activeNav, setActiveNav] = useState("home");
-  const authCtx = useContext(AuthContext);
-  async function logoutHandler() {
-    setActiveNav("logout");
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/api/auth/logout",
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.status == 200) {
-        authCtx.setIsLoggedOutHandler();
-        window.location.href = "/";
-      }
-    } catch (error) {
-      console.log(error);
-      alert(error);
-    }
-  }
-  if (authCtx.isLoggedIn && authCtx.isAdmin) {
-    return <Navigate to="/admin" />;
-  }
-
-  if (!authCtx.isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
-
+export default function Home() {
+  const context = useOutletContext();
+  const tasks = context.tasks;
   return (
-    <div>
-      <Header name={"Admin"} />
-      <section class="main-content columns is-fullheight">
-        <aside class="column is-2 is-narrow-mobile is-fullheight section">
-          <p class="menu-label is-hidden-touch">Navigation</p>
-          <ul class="menu-list">
-            <li>
-              <Link
-                to="/home"
-                onClick={() => setActiveNav("home")}
-                href="#"
-                class={activeNav == "home" ? "is-active" : ""}
-              >
-                <span class="icon">
-                  <FontAwesomeIcon icon={faHome} />
-                </span>{" "}
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/home/profile"
-                onClick={() => setActiveNav("profile")}
-                href="#"
-                class={activeNav == "profile" ? "is-active" : ""}
-              >
-                <span class="icon">
-                  <FontAwesomeIcon icon={faUser} />
-                </span>{" "}
-                Profile
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/home/points"
-                onClick={() => setActiveNav("points")}
-                href="#"
-                class={activeNav == "points" ? "is-active" : ""}
-              >
-                <span class="icon">
-                  <FontAwesomeIcon icon={faCheck} />
-                </span>{" "}
-                Points
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/home/tasks"
-                onClick={() => setActiveNav("tasks")}
-                href="#"
-                class={activeNav == "tasks" ? "is-active" : ""}
-              >
-                <span class="icon">
-                  <FontAwesomeIcon icon={faTasks} />
-                </span>{" "}
-                Tasks
-              </Link>
-            </li>
-            <li>
-              <Link
-                onClick={() => logoutHandler()}
-                href="#"
-                class={activeNav == "logout" ? "is-active" : ""}
-              >
-                <span class="icon">
-                  <FontAwesomeIcon icon={faRightFromBracket} />
-                </span>{" "}
-                Logout
-              </Link>
-            </li>
-          </ul>
-        </aside>
+    <div className="section">
+      {tasks.length <= 0 ? (
+        <h1 className="title is-4">Empty Tasks</h1>
+      ) : (
+        tasks.map((task) => {
+          return (
+            <div key={task.id} className="card">
+              <div className="card-content">
+                <div className="level">
+                  <div className="level-left">
+                    <div className="level-item">
+                      <figure className="image is-96x96">
+                        <img src={task.imageURL} alt={task.name} />
+                      </figure>
+                    </div>
+                    <div className="level-item">
+                      <div className="is-flex is-flex-direction-column">
+                        <h1 className="title is-4">{task.name}</h1>
+                        <Link to={`${task.id}`}>View in Detail</Link>
+                      </div>
+                    </div>
+                  </div>
 
-        <div class="container column is-10">
-          <Outlet />
-        </div>
-      </section>
+                  <div className="level-right">
+                    <div className="content level-item">
+                      <button
+                        onClick={(e) => e.preventDefault()}
+                        className="button is-primary"
+                      >
+                        {task.points}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      )}
     </div>
   );
 }

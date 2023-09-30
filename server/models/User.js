@@ -21,6 +21,11 @@ const User = sequelize.define("User", {
     allowNull: false,
     len: [6, 30],
   },
+  totalPoints: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  },
   isAdmin: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

@@ -8,13 +8,18 @@ const { hashPassword } = require("./util/helper");
 const app = express();
 
 const User = require("./models/User");
+const Task = require("./models/Task");
+const UserTask = require("./models/UserTask");
+
 const sequelize = require("./util/database");
 
 const authRoutes = require("./routes/auth");
+const adminRoutes = require("./routes/admin");
 const appRoutes = require("./routes/app");
 
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(
   cors({
     origin: ["http://localhost:5173", "http://localhost:3000"],
@@ -25,6 +30,7 @@ app.use(
 // create Admin user if not exists?
 
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/app", appRoutes);
 
 sequelize.sync().then(async () => {

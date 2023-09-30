@@ -14,7 +14,7 @@ export default function LandingPage() {
       <div class="column is-4">
         <div class="box has-text-centered">
           <p class="title">
-            <Link to="/admin/login">Admin Login</Link>
+            <Link to="/admin">Admin Login</Link>
           </p>
         </div>
       </div>

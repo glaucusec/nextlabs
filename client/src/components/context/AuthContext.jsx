@@ -36,7 +36,7 @@ export default function AuthContextProvider(props) {
     isLoggedIn: isLoggedIn,
     isAdmin: isAdmin,
     setIsLoggedInHandler: setIsLoggedInHandler,
-    setIsLoggedOutHandler: setIsLoggedOutHandler
+    setIsLoggedOutHandler: setIsLoggedOutHandler,
   };
   return (
     <AuthContext.Provider value={authContext}>

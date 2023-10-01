@@ -7,7 +7,13 @@ export default function Home() {
   return (
     <div className="section">
       {tasks.length <= 0 ? (
-        <h1 className="title is-4">Empty Tasks</h1>
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <h2 className="title">Empty Tasks</h2>
+            </div>
+          </div>
+        </div>
       ) : (
         tasks.map((task) => {
           return (

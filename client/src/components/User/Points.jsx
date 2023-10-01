@@ -16,7 +16,8 @@ export default function Points() {
           setPoints(response.data.totalPoints);
         }
       } catch (error) {
-        console.log(error);
+        const response = error.response;
+        alert(response.data.message);
       }
     }
     fetchPoints();
@@ -24,7 +25,13 @@ export default function Points() {
 
   return (
     <div className="section">
-      <h2 className="title">Your Total Points: {points}</h2>
+      <div class="card">
+        <div class="card-content">
+          <div class="content">
+            <h2 className="title">Your Total Points: {points}</h2>{" "}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

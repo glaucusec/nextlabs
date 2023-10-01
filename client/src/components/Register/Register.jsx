@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 
 export default function Register({ headName }) {
   const navigate = useNavigate();
@@ -48,7 +50,7 @@ export default function Register({ headName }) {
                 ref={name}
               />
               <span className="icon is-small is-left">
-                <i className="fas fa-envelope"></i>
+                <FontAwesomeIcon icon={faUser} />
               </span>
             </p>
           </div>
@@ -61,7 +63,7 @@ export default function Register({ headName }) {
                 ref={username}
               />
               <span className="icon is-small is-left">
-                <i className="fas fa-envelope"></i>
+                <FontAwesomeIcon icon={faUser} />
               </span>
             </p>
           </div>
@@ -74,7 +76,7 @@ export default function Register({ headName }) {
                 ref={password}
               />
               <span className="icon is-small is-left">
-                <i className="fas fa-lock"></i>
+                <FontAwesomeIcon icon={faLock} />
               </span>
             </p>
           </div>

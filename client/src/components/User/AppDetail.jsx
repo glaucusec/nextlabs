@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useOutletContext, useParams, Link, Navigate } from "react-router-dom";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faUpload, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 export default function AppDetail() {
+  const [selectedFileName, setSelectedFileName] =
+    useState("Upload Screenshot…");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const params = useParams();
   const outlet = useOutletContext();
 
@@ -13,17 +17,16 @@ export default function AppDetail() {
   const tasks = outlet.tasks;
   const task = tasks.find((task) => task.id == id);
 
-  const [selectedFileName, setSelectedFileName] =
-    useState("Upload Screenshot…");
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const fileChangeHandler = (file) => {
+  // Handle file input changes and dropped files
+  const fileChangeHandler = (files) => {
+    const file = files[0]; // Assuming you only handle one file at a time
     setSelectedFileName(file.name);
     setSelectedFile(file);
   };
 
   const fileUploadHandler = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("file", selectedFile);
     formData.append("TaskId", id);
@@ -39,10 +42,21 @@ export default function AppDetail() {
         }
       );
 
-      console.log(response);
+      if (response.status === 201) {
+        setIsLoading(false);
+        alert(response.data.message);
+      }
     } catch (error) {
-      console.error(error);
+      setIsLoading(false);
+      const response = error.response;
+      alert(response.data.message);
     }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    fileChangeHandler(files);
   };
 
   if (!task || task.length <= 0) {
@@ -51,8 +65,14 @@ export default function AppDetail() {
 
   return (
     <div className="section">
-      <Link to={"/home"}>{"< Home"}</Link>
-
+      <button className="button is-white">
+        <Link to="/home">
+          <span className="icon">
+            <FontAwesomeIcon icon={faArrowLeftLong} />
+          </span>
+        </Link>
+      </button>
+      <br />
       <div key={task.id} className="card">
         <div className="card-content">
           <div className="level">
@@ -84,37 +104,35 @@ export default function AppDetail() {
             </div>
           </div>
         </div>
-        <div className="card-content is-flex is-justify-content-center">
-          <div class="card">
-            {/* <div class="card-image">
-                <figure class="image is-4by3">
-                  <img
-                    src="https://bulma.io/images/placeholders/1280x960.png"
-                    alt="Placeholder image"
-                  />
-                </figure>
-                
-              </div> */}
-            <div class="file is-large is-boxed has-name">
-              <label class="file-label">
+        <div className="is-flex is-justify-content-center">
+          <div className="card">
+            <div
+              className="file is-large is-boxed has-name"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => handleDrop(e)}
+            >
+              <label className="file-label">
                 <input
-                  class="file-input"
+                  className="file-input"
                   type="file"
                   name="uploadedFile"
-                  onChange={(e) => fileChangeHandler(e.target.files[0])}
+                  onChange={(e) => fileChangeHandler(e.target.files)}
+                  accept="image/*"
                 />
-                <span class="file-cta">
-                  <span class="file-icon">
+                <span className="file-cta">
+                  <span className="file-icon">
                     <FontAwesomeIcon icon={faUpload} />
                   </span>
-                  <span class="file-label">{selectedFileName}</span>
+                  <span className="file-label">{selectedFileName}</span>
                 </span>
               </label>
             </div>
             <div className="is-flex is-justify-content-center">
               <button
                 onClick={fileUploadHandler}
-                className="button is-small is-light"
+                className={`button is-small is-light ${
+                  isLoading ? "is-loading" : ""
+                }`}
               >
                 Upload
               </button>

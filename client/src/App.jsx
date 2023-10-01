@@ -19,7 +19,6 @@ import LandingPage from "./components/LandingPage";
 
 function App() {
   const authCtx = useContext(AuthContext);
-  console.log(authCtx);
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />

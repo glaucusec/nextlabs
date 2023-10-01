@@ -2,6 +2,8 @@ import React, { useRef, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 
 export default function Login({ headName }) {
   const authCtx = useContext(AuthContext);
@@ -62,7 +64,7 @@ export default function Login({ headName }) {
                 ref={username}
               />
               <span className="icon is-small is-left">
-                <i className="fas fa-envelope"></i>
+                <FontAwesomeIcon icon={faUser} />
               </span>
               <span className="icon is-small is-right">
                 <i className="fas fa-check"></i>
@@ -78,7 +80,7 @@ export default function Login({ headName }) {
                 ref={password}
               />
               <span className="icon is-small is-left">
-                <i className="fas fa-lock"></i>
+                <FontAwesomeIcon icon={faLock} />
               </span>
             </p>
           </div>

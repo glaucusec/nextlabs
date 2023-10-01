@@ -22,4 +22,23 @@ const passwordsMatch = (plainTextPassword, hash) => {
   });
 };
 
-module.exports = { hashPassword, passwordsMatch };
+const isValidUsername = (username) => {
+  if (username.length == 0) {
+    return false;
+  }
+
+  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+    return false;
+  }
+
+  return true;
+};
+
+const isValidPassword = (password) => {
+  if (password.length < 5) {
+    return false;
+  }
+  return true;
+};
+
+module.exports = { hashPassword, passwordsMatch, isValidUsername, isValidPassword };

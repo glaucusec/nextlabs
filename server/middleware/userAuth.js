@@ -5,13 +5,28 @@ const jwtSecrectToken = process.env.jwtSecret;
 const User = require("../models/User");
 
 const userAuth = async (req, res, next) => {
-  // get the cookie named token
-  let cookies = req.cookies;
-  const jwtToken = cookies.jwt;
+  let jwtToken;
 
   try {
+    if (req.headers && req.headers.authorization && req.headers.authorization.split(" ")[0] === "Bearer") {
+      jwtToken = req.headers.authorization.split(" ")[1];
+    }
+    if (!jwtToken) {
+      const cookies = req.cookies;
+      if (cookies.token) {
+        jwtToken = cookies.token;
+      }
+    }
+
+    if (!jwtToken) {
+      return res.status(401).json({
+        message: "Unauthorized:  Token is missing",
+        status: "Unauthorized",
+      });
+    }
+
     const decoded = jwt.verify(jwtToken, jwtSecrectToken);
-    if (!decoded.role) {
+    if (!decoded.role || decoded.role !== "user") {
       return res.status(401).json({
         message: "You are not allowed to  do this operation",
         state: "Unauthorized",

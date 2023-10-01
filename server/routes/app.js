@@ -3,11 +3,12 @@ const multer = require("multer");
 const upload = multer({ dest: "./public/uploads" });
 const router = express.Router();
 
+const adminController = require("../controllers/adminController");
+
 const appController = require("../controllers/appController");
 const userAuthController = require("../middleware/userAuth");
 
-router.post("/points", userAuthController.userAuth, appController.getPoints);
-
+// this function handles the possible multer error.
 const handleError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     console.log("Error @app.js[route] >>>>", err.message);
@@ -17,6 +18,8 @@ const handleError = (err, req, res, next) => {
   }
 };
 
+router.post("/points", userAuthController.userAuth, appController.getPoints);
+
 router.post(
   "/completeTask",
   userAuthController.userAuth,
@@ -25,10 +28,8 @@ router.post(
   appController.completeTask
 );
 
-router.post(
-  "/completedTasks",
-  userAuthController.userAuth,
-  appController.completedTasks
-);
+router.post("/completedTasks", userAuthController.userAuth, appController.completedTasks);
+
+router.post("/fetchTasks", userAuthController.userAuth, adminController.fetchTasks);
 
 module.exports = router;

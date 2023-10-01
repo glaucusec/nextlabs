@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 export default function Tasks() {
   const [completedTasks, setCompletedTasks] = useState([]);
@@ -14,19 +13,25 @@ export default function Tasks() {
           { withCredentials: true }
         );
 
-        setCompletedTasks(response.data); // Update state with received data
+        setCompletedTasks(response.data);
       } catch (error) {
         console.error(error);
+        alert(error.response.data.message);
       }
     }
     fetchCompletedTasks();
   }, []);
 
-  // Wrap JSX code in a return statement
   return (
     <div className="section">
       {completedTasks.length === 0 ? (
-        <h1>No completed tasks to display</h1>
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <h2 className="title">No completed tasks to display</h2>
+            </div>
+          </div>
+        </div>
       ) : (
         completedTasks.map((task) => (
           <div key={task.id} className="card">

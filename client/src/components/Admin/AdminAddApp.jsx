@@ -45,8 +45,20 @@ export default function AdminAddApp() {
 
   function addPointsHandler(e) {
     e.preventDefault();
-    let points = prompt("Enter Points");
-    setPoints(points);
+    let point = prompt("Enter Points");
+
+    if (point === null || point.trim() === "") {
+      alert("Points cannot be empty!");
+      return;
+    }
+
+    if (!isNaN(point)) {
+      point = parseFloat(point);
+      console.log("Entered points:", point);
+      setPoints(point);
+    } else {
+      alert("Please enter a valid number for points.");
+    }
   }
 
   async function appSubmitHandler(e) {

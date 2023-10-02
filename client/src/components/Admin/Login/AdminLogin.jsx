@@ -18,7 +18,7 @@ export default function AdminLogin({ headName }) {
     let response;
     try {
       response = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/login`,
         {
           username: enteredUsername,
           password: enteredPassword,
@@ -32,7 +32,6 @@ export default function AdminLogin({ headName }) {
         navigate("/admin", { replace: true });
       }
     } catch (error) {
-      console.log(error);
       alert(error.response.data.message);
     }
   };
@@ -44,12 +43,7 @@ export default function AdminLogin({ headName }) {
         <form onSubmit={loginFormSubmitHandler} className="form">
           <div className="field">
             <p className="control has-icons-left has-icons-right">
-              <input
-                className="input"
-                type="text"
-                placeholder="Username"
-                ref={username}
-              />
+              <input className="input" type="text" placeholder="Username" ref={username} />
               <span className="icon is-small is-left">
                 <i className="fas fa-envelope"></i>
               </span>
@@ -60,12 +54,7 @@ export default function AdminLogin({ headName }) {
           </div>
           <div className="field">
             <p className="control has-icons-left">
-              <input
-                className="input"
-                type="password"
-                placeholder="Password"
-                ref={password}
-              />
+              <input className="input" type="password" placeholder="Password" ref={password} />
               <span className="icon is-small is-left">
                 <i className="fas fa-lock"></i>
               </span>

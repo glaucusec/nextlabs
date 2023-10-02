@@ -6,12 +6,8 @@ export default function AdminAddApp() {
   const navigate = useNavigate();
   const [points, setPoints] = useState("Add Points");
   const [categoryOptions, setCategoryOptions] = useState(["App Category"]);
-  const [imageURL, setImageURL] = useState(
-    "https://bulma.io/images/placeholders/256x256.png"
-  );
-  const [subcategoryOptions, setSubcategoryOptions] = useState([
-    "App SubCategory",
-  ]);
+  const [imageURL, setImageURL] = useState("https://bulma.io/images/placeholders/256x256.png");
+  const [subcategoryOptions, setSubcategoryOptions] = useState(["App SubCategory"]);
   const [fetching, setFetching] = useState(false);
   const appName = useRef();
   const appLink = useRef();
@@ -24,7 +20,7 @@ export default function AdminAddApp() {
     let response;
     try {
       response = await axios.post(
-        "http://localhost:3000/api/admin/fetchCategories",
+        `${import.meta.env.VITE_SERVER_URL}/api/admin/fetchCategories`,
         {
           appName: appName.current.value,
           appLink: appLink.current.value,
@@ -63,59 +59,53 @@ export default function AdminAddApp() {
 
   async function appSubmitHandler(e) {
     e.preventDefault();
-    const response = await axios.post(
-      "http://localhost:3000/api/admin/createTask",
-      {
-        appName: appName.current.value,
-        appLink: appLink.current.value,
-        category: selectedCategory.current.value,
-        subcategory: selectedSubCategory.current.value,
-        imageURL: imageURL,
-        points: points,
-      },
-      { withCredentials: true }
-    );
-    if (response.status == 201) {
-      alert("Task App Added");
-      navigate("/home");
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/admin/createTask`,
+        {
+          appName: appName.current.value,
+          appLink: appLink.current.value,
+          category: selectedCategory.current.value,
+          subcategory: selectedSubCategory.current.value,
+          imageURL: imageURL,
+          points: points,
+        },
+        { withCredentials: true }
+      );
+      if (response.status == 201) {
+        alert("Task App Added");
+        navigate("/home");
+      }
+    } catch (error) {
+      alert(error.response.statusText);
     }
   }
 
   return (
     <div className="section">
-      <div class="container ">
+      <div className="container ">
         <div className="is-flex is-justify-content-center pb-6">
-          <figure class="image is-128x128">
+          <figure className="image is-128x128">
             <img src={imageURL} />
           </figure>
         </div>
-        <form class="form">
-          <div class="columns is-multiline">
-            <div class="column is-half">
-              <div class="field">
-                <div class="control">
-                  <input
-                    ref={appName}
-                    class="input"
-                    type="text"
-                    placeholder="App Name"
-                  />
+        <form className="form">
+          <div className="columns is-multiline">
+            <div className="column is-half">
+              <div className="field">
+                <div className="control">
+                  <input ref={appName} className="input" type="text" placeholder="App Name" />
                 </div>
               </div>
             </div>
-            <div class="column is-half">
-              <div class="field">
-                <div class="control">
-                  <input
-                    ref={appLink}
-                    class="input"
-                    type="text"
-                    placeholder="App Link"
-                  />
+            <div className="column is-half">
+              <div className="field">
+                <div className="control">
+                  <input ref={appLink} className="input" type="text" placeholder="App Link" />
                 </div>
               </div>
             </div>
-            <div class="column is-full is-flex is-justify-content-center">
+            <div className="column is-full is-flex is-justify-content-center">
               <button
                 onClick={fetchCategoriesHandler}
                 className={`button is-small ${fetching ? "is-loading" : ""}`}
@@ -123,10 +113,10 @@ export default function AdminAddApp() {
                 Fetch Categories
               </button>
             </div>
-            <div class="column is-half" id="category">
-              <div class="field">
-                <div class="control">
-                  <div class="select is-fullwidth">
+            <div className="column is-half" id="category">
+              <div className="field">
+                <div className="control">
+                  <div className="select is-fullwidth">
                     <select ref={selectedCategory}>
                       {categoryOptions.map((option, index) => (
                         <option key={index}>{option}</option>
@@ -136,10 +126,10 @@ export default function AdminAddApp() {
                 </div>
               </div>
             </div>
-            <div class="column is-half" id="subcategory">
-              <div class="field">
-                <div class="control">
-                  <div class="select is-fullwidth">
+            <div className="column is-half" id="subcategory">
+              <div className="field">
+                <div className="control">
+                  <div className="select is-fullwidth">
                     <select ref={selectedSubCategory}>
                       {subcategoryOptions.map((option, index) => (
                         <option key={index}>{option}</option>
@@ -150,18 +140,18 @@ export default function AdminAddApp() {
               </div>
             </div>
           </div>
-          <div class="columns is-multiline">
-            <div class="column is-full">
-              <div class="buttons has-addons is-centered">
-                <button onClick={addPointsHandler} class="button is-primary">
+          <div className="columns is-multiline">
+            <div className="column is-full">
+              <div className="buttons has-addons is-centered">
+                <button onClick={addPointsHandler} className="button is-primary">
                   {points}
                 </button>
               </div>
             </div>
 
-            <div class="column is-full">
-              <div class="buttons has-addons is-centered">
-                <button onClick={appSubmitHandler} class="button is-primary">
+            <div className="column is-full">
+              <div className="buttons has-addons is-centered">
+                <button onClick={appSubmitHandler} className="button is-primary">
                   Submit
                 </button>
               </div>

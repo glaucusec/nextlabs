@@ -22,11 +22,11 @@ export default function HomeNavigation() {
   useEffect(() => {
     async function fetchDetails() {
       const response = await axios.post(
-        "http://localhost:3000/api/admin/fetchTasks",
+        `${import.meta.env.VITE_SERVER_URL}/api/app/fetchTasks`,
         {},
         { withCredentials: true }
       );
-      console.log(response)
+
       if (response.status == 200) {
         setTasks(response.data);
       }
@@ -37,12 +37,9 @@ export default function HomeNavigation() {
   async function logoutHandler() {
     setActiveNav("logout");
     try {
-      const response = await axios.get(
-        "http://localhost:3000/api/auth/logout",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/auth/logout`, {
+        withCredentials: true,
+      });
       if (response.status == 200) {
         authCtx.setIsLoggedOutHandler();
         window.location.href = "/";
@@ -59,18 +56,18 @@ export default function HomeNavigation() {
   return (
     <div>
       <Header name={"Admin"} />
-      <section class="main-content columns is-fullheight">
-        <aside class="column is-2 is-narrow-mobile is-fullheight section">
-          <p class="menu-label is-hidden-touch">Navigation</p>
-          <ul class="menu-list">
+      <section className="main-content columns is-fullheight">
+        <aside className="column is-2 is-narrow-mobile is-fullheight section">
+          <p className="menu-label is-hidden-touch">Navigation</p>
+          <ul className="menu-list">
             <li>
               <Link
                 to="/home"
                 onClick={() => setActiveNav("home")}
                 href="#"
-                class={activeNav == "home" ? "is-active" : ""}
+                className={activeNav == "home" ? "is-active" : ""}
               >
-                <span class="icon">
+                <span className="icon">
                   <FontAwesomeIcon icon={faHome} />
                 </span>{" "}
                 Home
@@ -81,9 +78,9 @@ export default function HomeNavigation() {
                 to="/home/profile"
                 onClick={() => setActiveNav("profile")}
                 href="#"
-                class={activeNav == "profile" ? "is-active" : ""}
+                className={activeNav == "profile" ? "is-active" : ""}
               >
-                <span class="icon">
+                <span className="icon">
                   <FontAwesomeIcon icon={faUser} />
                 </span>{" "}
                 Profile
@@ -94,9 +91,9 @@ export default function HomeNavigation() {
                 to="/home/points"
                 onClick={() => setActiveNav("points")}
                 href="#"
-                class={activeNav == "points" ? "is-active" : ""}
+                className={activeNav == "points" ? "is-active" : ""}
               >
-                <span class="icon">
+                <span className="icon">
                   <FontAwesomeIcon icon={faCheck} />
                 </span>{" "}
                 Points
@@ -107,9 +104,9 @@ export default function HomeNavigation() {
                 to="/home/tasks"
                 onClick={() => setActiveNav("tasks")}
                 href="#"
-                class={activeNav == "tasks" ? "is-active" : ""}
+                className={activeNav == "tasks" ? "is-active" : ""}
               >
-                <span class="icon">
+                <span className="icon">
                   <FontAwesomeIcon icon={faTasks} />
                 </span>{" "}
                 Tasks
@@ -119,9 +116,9 @@ export default function HomeNavigation() {
               <Link
                 onClick={() => logoutHandler()}
                 href="#"
-                class={activeNav == "logout" ? "is-active" : ""}
+                className={activeNav == "logout" ? "is-active" : ""}
               >
-                <span class="icon">
+                <span className="icon">
                   <FontAwesomeIcon icon={faRightFromBracket} />
                 </span>{" "}
                 Logout
@@ -130,7 +127,7 @@ export default function HomeNavigation() {
           </ul>
         </aside>
 
-        <div class="container column is-10">
+        <div className="container column is-10">
           <Outlet context={{ tasks: tasks }} />
         </div>
       </section>

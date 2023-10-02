@@ -16,11 +16,11 @@ export default function Login({ headName }) {
   const loginFormSubmitHandler = async (e) => {
     e.preventDefault();
     const enteredUsername = username.current.value;
-    const enteredPassword = username.current.value;
+    const enteredPassword = password.current.value;
     let response;
     try {
       response = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/login`,
         {
           username: enteredUsername,
           password: enteredPassword,
@@ -38,8 +38,11 @@ export default function Login({ headName }) {
         }
       }
     } catch (error) {
-      console.log(error);
-      alert(error.response.data.message);
+      if (error.response.status == 401) {
+        alert(error.response.data.message);
+      } else {
+        alert("Something Went Wrong! Check Devtools");
+      }
     }
   };
 
@@ -57,12 +60,7 @@ export default function Login({ headName }) {
         <form onSubmit={loginFormSubmitHandler} className="form">
           <div className="field">
             <p className="control has-icons-left has-icons-right">
-              <input
-                className="input"
-                type="text"
-                placeholder="Username"
-                ref={username}
-              />
+              <input className="input" type="text" placeholder="Username" ref={username} />
               <span className="icon is-small is-left">
                 <FontAwesomeIcon icon={faUser} />
               </span>
@@ -73,12 +71,7 @@ export default function Login({ headName }) {
           </div>
           <div className="field">
             <p className="control has-icons-left">
-              <input
-                className="input"
-                type="password"
-                placeholder="Password"
-                ref={password}
-              />
+              <input className="input" type="password" placeholder="Password" ref={password} />
               <span className="icon is-small is-left">
                 <FontAwesomeIcon icon={faLock} />
               </span>

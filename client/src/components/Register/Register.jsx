@@ -18,7 +18,7 @@ export default function Register({ headName }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/register",
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/register`,
         {
           name: enteredName,
           username: enteredUsername,
@@ -32,8 +32,9 @@ export default function Register({ headName }) {
         navigate("/login", { replace: true });
       }
     } catch (error) {
-      console.log(error);
-      alert(response.data.message);
+      if (error.response.status == 400) {
+        alert(error.response.data.message);
+      }
     }
   };
   return (
@@ -43,12 +44,7 @@ export default function Register({ headName }) {
         <form onSubmit={registerFormSubmitHandler} className="form">
           <div className="field">
             <p className="control has-icons-left has-icons-right">
-              <input
-                className="input"
-                type="text"
-                placeholder="Name"
-                ref={name}
-              />
+              <input className="input" type="text" placeholder="Name" ref={name} />
               <span className="icon is-small is-left">
                 <FontAwesomeIcon icon={faUser} />
               </span>
@@ -56,12 +52,7 @@ export default function Register({ headName }) {
           </div>
           <div className="field">
             <p className="control has-icons-left has-icons-right">
-              <input
-                className="input"
-                type="text"
-                placeholder="Username"
-                ref={username}
-              />
+              <input className="input" type="text" placeholder="Username" ref={username} />
               <span className="icon is-small is-left">
                 <FontAwesomeIcon icon={faUser} />
               </span>
@@ -69,12 +60,7 @@ export default function Register({ headName }) {
           </div>
           <div className="field">
             <p className="control has-icons-left">
-              <input
-                className="input"
-                type="password"
-                placeholder="Password"
-                ref={password}
-              />
+              <input className="input" type="password" placeholder="Password" ref={password} />
               <span className="icon is-small is-left">
                 <FontAwesomeIcon icon={faLock} />
               </span>

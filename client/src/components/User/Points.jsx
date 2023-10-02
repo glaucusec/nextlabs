@@ -7,7 +7,7 @@ export default function Points() {
     async function fetchPoints() {
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/app/points",
+          `${import.meta.env.VITE_SERVER_URL}/api/app/points`,
           {},
           { withCredentials: true }
         );
@@ -16,8 +16,7 @@ export default function Points() {
           setPoints(response.data.totalPoints);
         }
       } catch (error) {
-        const response = error.response;
-        alert(response.data.message);
+        alert(error.response.data.message);
       }
     }
     fetchPoints();
@@ -25,9 +24,9 @@ export default function Points() {
 
   return (
     <div className="section">
-      <div class="card">
-        <div class="card-content">
-          <div class="content">
+      <div className="card">
+        <div className="card-content">
+          <div className="content">
             <h2 className="title">Your Total Points: {points}</h2>{" "}
           </div>
         </div>

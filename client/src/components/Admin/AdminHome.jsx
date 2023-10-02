@@ -7,13 +7,17 @@ export default function AdminHome() {
   const [tasks, setTasks] = useState([]);
   useEffect(() => {
     async function fetchDetails() {
-      const response = await axios.post(
-        "http://localhost:3000/api/admin/fetchTasks",
-        {},
-        { withCredentials: true }
-      );
-      if (response.status == 200) {
-        setTasks(response.data);
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/api/admin/fetchTasks`,
+          {},
+          { withCredentials: true }
+        );
+        if (response.status == 200) {
+          setTasks(response.data);
+        }
+      } catch (error) {
+        alert(error.response.statusText);
       }
     }
     fetchDetails();
@@ -28,23 +32,20 @@ export default function AdminHome() {
                 <div className="level">
                   <div className="level-left">
                     <div className="level-item">
-                      <figure class="image is-96x96">
+                      <figure className="image is-96x96">
                         <img src={task.imageURL} />
                       </figure>
                     </div>
                     <div className="level-item">
-                      <div class="is-flex is-flex-direction-column">
-                        <h1 class="title is-4">{task.name}</h1>
+                      <div className="is-flex is-flex-direction-column">
+                        <h1 className="title is-4">{task.name}</h1>
                       </div>
                     </div>
                   </div>
 
                   <div className="level-right">
                     <div className="content level-item">
-                      <button
-                        onClick={(e) => e.preventDefault()}
-                        className="button is-primary"
-                      >
+                      <button onClick={(e) => e.preventDefault()} className="button is-primary">
                         {task.points}
                       </button>
                     </div>

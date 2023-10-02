@@ -17,6 +17,8 @@ const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const appRoutes = require("./routes/app");
 
+const dailyWorker = require('./worker/dailyWorker')
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -26,8 +28,6 @@ app.use(
     credentials: true,
   })
 );
-
-// create Admin user if not exists?
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
@@ -42,7 +42,7 @@ sequelize.sync().then(async () => {
     await User.create({
       name: "Admin",
       username: "admin",
-      password: hashedPassword, // Set a secure password
+      password: hashedPassword,
       isAdmin: true,
     });
   }

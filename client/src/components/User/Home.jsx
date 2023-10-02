@@ -7,9 +7,9 @@ export default function Home() {
   return (
     <div className="section">
       {tasks.length <= 0 ? (
-        <div class="card">
-          <div class="card-content">
-            <div class="content">
+        <div className="card">
+          <div className="card-content">
+            <div className="content">
               <h2 className="title">Empty Tasks</h2>
             </div>
           </div>

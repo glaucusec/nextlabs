@@ -8,7 +8,11 @@ const userAuth = async (req, res, next) => {
   let jwtToken;
 
   try {
-    if (req.headers && req.headers.authorization && req.headers.authorization.split(" ")[0] === "Bearer") {
+    if (
+      req.headers &&
+      req.headers.authorization &&
+      req.headers.authorization.split(" ")[0] === "Bearer"
+    ) {
       jwtToken = req.headers.authorization.split(" ")[1];
     }
     if (!jwtToken) {
@@ -24,7 +28,7 @@ const userAuth = async (req, res, next) => {
         status: "Unauthorized",
       });
     }
-
+    console.log(jwtToken);
     const decoded = jwt.verify(jwtToken, jwtSecrectToken);
     if (!decoded.role || decoded.role !== "user") {
       return res.status(401).json({

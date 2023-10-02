@@ -8,7 +8,7 @@ export default function Tasks() {
     async function fetchCompletedTasks() {
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/app/completedTasks",
+          `${import.meta.env.VITE_SERVER_URL}/api/app/completedTasks`,
           {},
           { withCredentials: true }
         );
@@ -25,9 +25,9 @@ export default function Tasks() {
   return (
     <div className="section">
       {completedTasks.length === 0 ? (
-        <div class="card">
-          <div class="card-content">
-            <div class="content">
+        <div className="card">
+          <div className="card-content">
+            <div className="content">
               <h2 className="title">No completed tasks to display</h2>
             </div>
           </div>
@@ -52,10 +52,7 @@ export default function Tasks() {
 
                 <div className="level-right">
                   <div className="content level-item">
-                    <button
-                      onClick={(e) => e.preventDefault()}
-                      className="button is-primary"
-                    >
+                    <button onClick={(e) => e.preventDefault()} className="button is-primary">
                       {`Points Awarded: ${task.points}`}
                     </button>
                   </div>

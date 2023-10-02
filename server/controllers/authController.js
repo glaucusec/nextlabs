@@ -16,8 +16,8 @@ const login = async (req, res, next) => {
 
   if (!isValidUsername(username) || !isValidPassword(password)) {
     return res.status(400).json({
-      message: "Invalid Login Username or Password",
-      status: "Unauthorized",
+      message: "Invalid username or password",
+      status: "Bad Request",
     });
   }
 
@@ -25,13 +25,13 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ where: { username: username } });
 
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: "User not found", status: "Unauthorized" });
     }
 
     const match = await passwordsMatch(password, user.password);
 
     if (!match) {
-      return res.status(401).json({ message: "Invalid credentials! ", status: "Unauthorized" });
+      return res.status(401).json({ message: "Invalid credentials", status: "Unauthorized" });
     }
 
     const maxAge = 3 * 60 * 60;
@@ -45,7 +45,7 @@ const login = async (req, res, next) => {
 
     res.cookie(
       "context",
-      JSON.stringify({ name: user.name, isLoggedIn: true, isAdmin: user.isAdmin ? true : false }),
+      JSON.stringify({ name: user.name, isLoggedIn: true, isAdmin: user.isAdmin }),
       {
         maxAge: maxAge * 1000,
       }
@@ -56,13 +56,13 @@ const login = async (req, res, next) => {
       user: {
         name: user.name,
         username: username,
-        isAdmin: user.isAdmin ? true : false,
+        isAdmin: user.isAdmin,
       },
       token: !user.isAdmin ? token : null,
     });
   } catch (error) {
-    console.log(error);
-    res.status(400).json({
+    console.error(error);
+    res.status(500).json({
       message: "An error occurred",
       error: error.message,
     });
@@ -75,45 +75,43 @@ const register = async (req, res, next) => {
   const password = req.body.password;
   if (password.length < 6) {
     return res.status(400).json({
-      message: "Password less than 6 characters",
+      message: "Password must be at least 6 characters long",
+      status: "Bad Request",
     });
   }
 
   const hashedPassword = await hashPassword(password);
 
-  let user;
   try {
-    user = User.create({
+    const user = await User.create({
       name: name,
       username: username,
       password: hashedPassword,
     });
+
+    return res.status(200).json({
+      message: "User successfully created",
+      user: {
+        name: user.name,
+        username: username,
+      },
+    });
   } catch (error) {
-    console.log(error);
-    return res.status(401).json({
-      message: "User not successful created",
-      error: error.mesage,
+    console.error(error);
+    return res.status(500).json({
+      message: "User creation failed",
+      error: error.message,
     });
   }
-
-  return res.status(200).json({
-    message: "User successfully created",
-    user: {
-      name: user.name,
-      username: username,
-    },
-  });
 };
 
 const logout = async (req, res, next) => {
-  res.cookie("jwt", "", {
-    maxAge: "1",
+  res.clearCookie("token");
+  res.clearCookie("context");
+  res.setHeader("Location", `${process.env.CLIENT_URL}/login`);
+  res.status(200).json({
+    message: "Logout successful",
   });
-  res.cookie("context", "", {
-    maxAge: "1",
-  });
-  res.setHeader("Location", "http://localhost:5173/login");
-  res.status(200).json();
 };
 
-module.exports = { login, register, logout }; 
+module.exports = { login, register, logout };

@@ -32,4 +32,6 @@ router.post("/completedTasks", userAuthController.userAuth, appController.comple
 
 router.post("/fetchTasks", userAuthController.userAuth, adminController.fetchTasks);
 
+router.get("/fetchTask/:id", userAuthController.userAuth, appController.fetchTask);
+
 module.exports = router;

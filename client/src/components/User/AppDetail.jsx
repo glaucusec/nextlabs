@@ -5,8 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 export default function AppDetail() {
-  const [selectedFileName, setSelectedFileName] =
-    useState("Upload Screenshot…");
+  const [selectedFileName, setSelectedFileName] = useState("Upload Screenshot…");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,7 +31,7 @@ export default function AppDetail() {
     formData.append("TaskId", id);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/app/completeTask",
+        `${import.meta.env.VITE_SERVER_URL}/api/app/completeTask`,
         formData,
         {
           headers: {
@@ -94,10 +93,7 @@ export default function AppDetail() {
 
             <div className="level-right">
               <div className="content level-item">
-                <button
-                  onClick={(e) => e.preventDefault()}
-                  className="button is-primary"
-                >
+                <button onClick={(e) => e.preventDefault()} className="button is-primary">
                   {task.points}
                 </button>
               </div>
@@ -130,9 +126,7 @@ export default function AppDetail() {
             <div className="is-flex is-justify-content-center">
               <button
                 onClick={fileUploadHandler}
-                className={`button is-small is-light ${
-                  isLoading ? "is-loading" : ""
-                }`}
+                className={`button is-small is-light ${isLoading ? "is-loading" : ""}`}
               >
                 Upload
               </button>

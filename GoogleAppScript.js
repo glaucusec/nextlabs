@@ -34,7 +34,7 @@ function fetchAppIdDetails(appId) {
       Authorization: TOKEN,
     },
   };
-  let response = UrlFetchApp.fetch(`http://54.167.130.123/api/app/fetchTask/${appId}`, options);
+  let response = UrlFetchApp.fetch(`http://34.230.193.181/api/app/fetchTask/${appId}`, options);
   if (response.getResponseCode() == 200) {
     let content = response.getContentText();
     let parsedContent = JSON.parse(content);

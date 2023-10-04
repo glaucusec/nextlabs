@@ -40,9 +40,9 @@
 
 ### Overview
 
-- Visit [http://54.167.130.123/](http://54.167.130.123/) to view the application.
+- Visit [http://34.230.193.181/](http://34.230.193.181/) to view the application.
 - Technologies Used: **NodeJS**, **ExpressJS**, **MySQL**, **Sequelize**, **Puppeteer**, **ReactJS**, **Axios**, **Nginx**, **Jenkins** etc..
-- Server running on **AWS EC2** instance @ Ip 52.91.211.36 port 3000.
+- Server running on **AWS EC2** instance @ Ip 34.230.193.181/ port 3000.
 - Used **Nginx** as the **reverse proxy** to redirect the traffic Internally.
 - MYSQL Server running on **Amazon RDS** database-1.c5hlysjb44mm.us-east-1.rds.amazonaws.com @ port 3306
 
@@ -60,13 +60,13 @@
 A. Admin Facing
 
 - Admin user can add android app as well as the number of points - earned by user for downloading the app
-- Goto [http://54.167.130.123/](http://54.167.130.123/) and click on `Admin Login` to login as Admin
+- Goto [http://34.230.193.181/](http://34.230.193.181/) and click on `Admin Login` to login as Admin
 
 B. User Facing
 
 - User can see the apps added by the admin and the points
 - He / She can completed the Tasks and earn points
-- Goto [http://54.167.130.123/](http://54.167.130.123/) and click on `User Login` to login as User
+- Goto [http://34.230.193.181/](http://34.230.193.181/) and click on `User Login` to login as User
 
 ### Installation on AWS EC2
 
@@ -99,7 +99,7 @@ Create a new branch called `deployments` for only deploying the application. Pus
 
 - Install Jenkins and Check if jenkins is running via `sudo systemctl status jenkins`
 - Make sure you have the .env file in the folder `/home/ubuntu/envFolders`
-- Open [http://54.167.130.123:8080](http://54.167.130.123:8080) and login.
+- Open [http://34.230.193.181/:8080](http://34.230.193.181/:8080) and login.
 - Add Gitlab credentials in `Credentials` section.
 - Create a new Job with a suitable name
 - Add the git repo url and select the `deployments` branch

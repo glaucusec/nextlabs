@@ -46,6 +46,8 @@
 - Used **Nginx** as the **reverse proxy** to redirect the traffic Internally.
 - MYSQL Server running on **Amazon RDS** database-1.c5hlysjb44mm.us-east-1.rds.amazonaws.com @ port 3306
 
+`NOTE` The script for scraping the category of the app from the playstore - every 24 hours is [here](https://gitlab.com/glaucusec/nextlabs/-/blob/main/server/worker/dailyWorker.js?ref_type=heads)
+
 **Database Relationships**
 
 - We have 3 table, `Task`, `User` and `CompletedTask`. Only `admin` use can add Task.

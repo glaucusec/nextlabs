@@ -15,7 +15,7 @@
 
 ### Task Walkthrough
 
-- A complete walkthrough of this task is available as a video [here]()
+- A complete walkthrough of this task is available as a video [Google Drive](https://drive.google.com/drive/folders/1fbO41OhAomnJPmlouCe9DuOdL18R7YFd?usp=drive_link) or [Youtube](https://youtu.be/1T_V91yOLKs)
 
 ## Problem Set I - Regex
 
@@ -99,7 +99,7 @@ Create a new branch called `deployments` for only deploying the application. Pus
 
 - Install Jenkins and Check if jenkins is running via `sudo systemctl status jenkins`
 - Make sure you have the .env file in the folder `/home/ubuntu/envFolders`
-- Open [http://34.230.193.181/:8080](http://34.230.193.181/:8080) and login.
+- Open [http://34.230.193.181:8080](http://34.230.193.181:8080) and login.
 - Add Gitlab credentials in `Credentials` section.
 - Create a new Job with a suitable name
 - Add the git repo url and select the `deployments` branch

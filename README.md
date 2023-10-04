@@ -10,7 +10,7 @@
      - [API Reference](#api-reference)
      - [Running the application locally](#running-the-application-locally)
   2. [Part B](#part-b)
-     - Main script can be found [here](https://gitlab.com/glaucusec/nextlabs/-/blob/main/GoogleAppScript.js)
+     - Main Google Script can be found [here](https://gitlab.com/glaucusec/nextlabs/-/blob/main/GoogleAppScript.js)
 - [Problem Set 3](#problem-set-3)
 
 ### Task Walkthrough
@@ -121,7 +121,7 @@ Create a new branch called `deployments` for only deploying the application. Pus
 
 ### Running the application locally
 
-- For complete local Installation steps visit [here](https://gitlab.com/glaucusec/nextlabs/-/blob/main/INSTALLATION.md)
+- For complete local Installation steps visit [here](https://gitlab.com/glaucusec/nextlabs/-/blob/main/documentation/INSTALLATION.md)
 
 `NOTE`:
 I have tried using RabbitMQ and was unsuccessful to use it; but have documented what I learned and what went wrong [here](https://gitlab.com/glaucusec/nextlabs/-/blob/main/RABBITMQ.md)
